@@ -4,6 +4,7 @@
     <%- include('partials/head') %>
   </head>
   <body>
+    <%- include('partials/navbar') %>
     <h1>Edit Article</h1>
     <form id = 'article' method = 'POST' action = '/article/edit/<%= article._id %>'>
       <label for="title">Title</label>

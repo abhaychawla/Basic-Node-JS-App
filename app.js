@@ -26,6 +26,7 @@ db.on('error', function(err) {
 
 //Middleware for parsing post request data using bodyParser
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
+app.use(urlencodedParser);
 
 //Home Path
 app.get('/', function(req, res) {
@@ -41,67 +42,9 @@ app.get('/', function(req, res) {
   });
 });
 
-//Add article
-app.get('/article/add', function(req, res) {
-  res.render('add_article', {
-    title: 'Add Article'
-  });
-});
-
-app.post('/article/add', urlencodedParser, function(req, res) {
-  var article = new Article(req.body).save(function(err, article) {
-    if(err)
-      console.log(err);
-    else
-      res.redirect('/');
-  });
-});
-
-//View Article
-app.get('/article/:id', function(req, res) {
-  Article.findById(req.params.id, function(err, article) {
-    if(err)
-      console.log(err);
-    else {
-      res.render('article', {
-        title: 'Article',
-        article: article
-      });
-    }
-  });
-});
-
-//Edit Article
-app.get('/article/edit/:id', function(req, res) {
-  Article.findById(req.params.id, function(err, article) {
-    res.render('edit_article', {
-      title: 'Edit Article',
-      article: article
-    });
-  });
-});
-
-app.post('/article/edit/:id', urlencodedParser, function(req, res) {
-  var article = req.body;
-  var id = {_id: req.params.id};
-  Article.update(id, article, function(err) {
-    if(err)
-      console.log(err);
-    else
-      res.redirect('/');
-  });
-});
-
-//Delete Article
-app.delete('/article/:id', function(req, res) {
-  var id = {_id: req.params.id};
-  Article.remove(id, function(err) {
-    if(err)
-      console.log(err);
-    else
-      res.send('success');
-  });
-});
+//Routes
+var article = require('./routes/article');
+app.use('/article', article);
 
 //Listen to port
 if(!module.parent) {

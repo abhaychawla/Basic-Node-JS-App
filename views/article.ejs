@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <%- include('partials/head') %>
+  </head>
+  <body>
+    <h1> <%= article.title %> </h1>
+    <h5> Written By: <%= article.author %> </h5>
+    <p> <%= article.desc %> </p>
+    <hr>
+    <button id = 'edit-article' onclick = 'window.location.href="/article/edit/<%= article._id %>"'> Edit </button>
+    <button id = 'delete-article' onclick = 'window.location.href="#"' articleid = <%= article._id %> > Delete </button>
+    <%- include('partials/footer') %>
+  </body>
+</html>

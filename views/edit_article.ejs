@@ -8,13 +8,13 @@
     <h1>Edit Article</h1>
     <form id = 'article' method = 'POST' action = '/article/edit/<%= article._id %>'>
       <label for="title">Title</label>
-      <input type = 'text' name = 'title' placeholder = 'Title' value='<%= article.title %>' required>
+      <input type = 'text' id = 'title' name = 'title' placeholder = 'Title' value='<%= article.title %>' required>
       <br>
       <label for="author">Author</label>
-      <input type = 'text' name = 'author' placeholder = 'Author' value='<%= article.author %>' required>
+      <input type = 'text' id = 'author' name = 'author' placeholder = 'Author' value='<%= article.author %>' required>
       <br>
-      <label for="author">Description</label>
-      <textarea name = 'desc' placeholder = 'Description' required><%= article.desc %></textarea>
+      <label for="desc">Description</label>
+      <textarea id = 'desc' name = 'desc' placeholder = 'Description' required><%= article.desc %></textarea>
       <br>
       <input type = 'submit' value = 'Submit'>
     </form>

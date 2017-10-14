@@ -50,7 +50,7 @@ app.get('*', function(req, res, next) {
 });
 
 //Home Path
-app.get('/', function(req, res) {
+app.get('/', ensureAuthentication, function(req, res) {
   Article.find({}, function(err, articles) {
     if(err)
       console.log(err)
@@ -69,6 +69,22 @@ app.use('/article', article);
 
 var user = require('./routes/user');
 app.use('/user', user);
+
+//Request Status 404
+app.get('*', function(req, res) {
+    res.status(404);
+    res.send('404: Requested URL cannot be found!');
+});
+
+//Access Control
+function ensureAuthentication(req, res, next) {
+  if(req.isAuthenticated()) {
+    return next();
+  }
+  else {
+    res.redirect('/user/login');
+  }
+}
 
 //Listen to port
 if(!module.parent) {

@@ -5,12 +5,16 @@
   </head>
   <body>
     <%- include('partials/navbar') %>
-    <h1> <%= article.title %> </h1>
-    <h5> Written By: <%= article.author %> </h5>
-    <p> <%= article.desc %> </p>
-    <hr>
-    <button id = 'edit-article' onclick = 'window.location.href="/article/edit/<%= article._id %>"'> Edit </button>
-    <button id = 'delete-article' onclick = 'window.location.href="#"' articleid = <%= article._id %> > Delete </button>
+    <div class="container">
+      <h1> <%= article.title %> </h1>
+      <h5> Written By: <%= author %> </h5>
+      <p> <%= article.desc %> </p>
+      <hr>
+      <% if(user && user.id == article.author) { %>
+        <button class = "btn btn-primary" id = 'edit-article' onclick = 'window.location.href="/article/edit/<%= article._id %>"'> Edit </button>
+        <button class = "btn btn-danger" id = 'delete-article' onclick = 'window.location.href="#"' articleid = <%= article._id %> > Delete </button>
+      <% } %>
+    </div>
     <%- include('partials/footer') %>
   </body>
 </html>

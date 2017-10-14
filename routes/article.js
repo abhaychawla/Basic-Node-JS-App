@@ -2,16 +2,21 @@ var express = require('express');
 var router = express.Router();
 
 var Article = require('../models/articleModel');
+var User = require('../models/userModel');
 
 //Add article
-router.get('/add', function(req, res) {
+router.get('/add', ensureAuthentication, function(req, res) {
   res.render('add_article', {
     title: 'Add Article'
   });
 });
 
 router.post('/add', function(req, res) {
-  var article = new Article(req.body).save(function(err, article) {
+  var article = new Article();
+  article.title = req.body.title;
+  article.author = req.user._id;
+  article.desc = req.body.desc;
+  article.save(function(err, article) {
     if(err)
       console.log(err);
     else
@@ -20,26 +25,38 @@ router.post('/add', function(req, res) {
 });
 
 //View Article
-router.get('/:id', function(req, res) {
+router.get('/:id', ensureAuthentication, function(req, res) {
   Article.findById(req.params.id, function(err, article) {
     if(err)
       console.log(err);
     else {
-      res.render('article', {
-        title: 'Article',
-        article: article
+      User.findById(article.author, function(err, user) {
+        if(err)
+          console.log(err);
+        else {
+          res.render('article', {
+            title: 'Article',
+            article: article,
+            author: user.name
+          });
+        }
       });
     }
   });
 });
 
 //Edit Article
-router.get('/edit/:id', function(req, res) {
+router.get('/edit/:id', ensureAuthentication, function(req, res) {
   Article.findById(req.params.id, function(err, article) {
-    res.render('edit_article', {
-      title: 'Edit Article',
-      article: article
-    });
+    if(article.author != req.user._id) {
+      res.redirect('/');
+    }
+    else {
+      res.render('edit_article', {
+        title: 'Edit Article',
+        article: article
+      });
+    }
   });
 });
 
@@ -64,5 +81,15 @@ router.delete('/:id', function(req, res) {
       res.send('success');
   });
 });
+
+//Access Control
+function ensureAuthentication(req, res, next) {
+  if(req.isAuthenticated()) {
+    return next();
+  }
+  else {
+    res.redirect('/user/login');
+  }
+}
 
 module.exports = router;
